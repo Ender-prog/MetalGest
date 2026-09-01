@@ -82,7 +82,8 @@ CREATE TABLE orden_trabajo (
     prioridad VARCHAR(20),
     estado VARCHAR(30),
     observaciones TEXT,
-
+    id_usuario INT NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido)
 );
 
