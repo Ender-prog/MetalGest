@@ -352,3 +352,190 @@ body {
     color: var(--naranja-hover);
     text-decoration: underline;
 }
+
+/* =========================================================
+   ESTILOS ESPECÍFICOS PARA LA PÁGINA DE SERVICIOS
+========================================================= */
+
+/* Hero específico para servicios */
+.hero-servicios {
+    padding: 4rem 3rem;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid var(--naranja);
+}
+
+/* Grilla para las tarjetas detalladas de servicios */
+.services-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Una columna para que ocupen todo el ancho y se vea como lista */
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+}
+
+/* Tarjeta detallada de servicio */
+.service-detail-card {
+    background-color: var(--gris-mate);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    border-left: 5px solid var(--azul-petroleo);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-left-color 0.3s ease;
+}
+
+/* En pantallas grandes, icono a la izquierda y texto a la derecha */
+@media (min-width: 768px) {
+    .service-detail-card {
+        flex-direction: row;
+    }
+}
+
+.service-detail-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    border-left-color: var(--naranja);
+}
+
+/* Contenedor del ícono SVG */
+.service-icon {
+    background-color: var(--azul-petroleo-oscuro);
+    padding: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 180px;
+}
+
+.service-icon svg {
+    width: 60px;
+    height: 60px;
+    color: var(--naranja);
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.service-detail-card:hover .service-icon svg {
+    transform: scale(1.1);
+    color: var(--amarillo-hover);
+}
+
+/* Contenido de la tarjeta (textos y listas) */
+.service-content {
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.service-content h2 {
+    color: var(--texto-blanco);
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--azul-petroleo-oscuro);
+    padding-bottom: 0.5rem;
+}
+
+.service-content p {
+    color: var(--texto-claro);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+/* Lista de características del servicio */
+.service-features {
+    list-style: none;
+    margin-bottom: 2rem;
+    padding-left: 0;
+}
+
+.service-features li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #a1a1aa; /* Un gris un poco más claro para la lista */
+    font-size: 0.95rem;
+}
+
+/* Viñetas personalizadas (flechitas naranjas) */
+.service-features li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: var(--naranja);
+    font-weight: bold;
+}
+
+/* Botón más pequeño para las tarjetas */
+.btn-small {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+    align-self: flex-start; /* Evita que el botón ocupe todo el ancho */
+    margin-top: auto; /* Empuja el botón hacia abajo si hay espacio extra */
+}
+
+
+/* ============================================ Asegurar que la tarjeta base sea la referencia posicional */
+.service-card {
+    position: relative;
+}
+
+/* Estilos del desplegable superpuesto */
+.service-details {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%; /* Cubre la tarjeta completa, se expande si hay más texto */
+    background-color: #1c2a38; /* Fondo azul petróleo / gris mate oscuro */
+    border: 1px solid #b87333; /* Borde en acento cobre */
+    padding: 1.5rem;
+    box-sizing: border-box;
+    z-index: 10;
+    
+    /* Estado inicial oculto y retraído */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    
+    /* Para centrar el contenido internamente si lo deseas */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Clase que se activa con JS */
+.service-details.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.service-details h3 {
+    color: #ffffff;
+    margin-top: 0;
+}
+
+.service-details p {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+}
+
+/* Botón de cierre */
+.close-details {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: #b87333; /* Cobre */
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.close-details:hover {
+    color: #ffffff;
+}
