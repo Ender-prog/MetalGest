@@ -36,6 +36,19 @@ CREATE TABLE usuario (
     FOREIGN KEY (id_rol) REFERENCES rol(id_rol)
 );
 
+INSERT INTO usuario (nombre, apellido, usuario, contrasena, id_rol)
+SELECT 'Ana', 'Gomez', 'admin', 'admin', id_rol FROM rol WHERE nombre = 'Administracion'
+UNION ALL
+SELECT 'Carlos', 'Rossi', 'produccion', 'produccion', id_rol FROM rol WHERE nombre = 'Produccion'
+UNION ALL
+SELECT 'Marta', 'Lopez', 'mantenimiento', 'mantenimiento', id_rol FROM rol WHERE nombre = 'Mantenimiento'
+UNION ALL
+SELECT 'Diego', 'Perez', 'deposito', 'deposito', id_rol FROM rol WHERE nombre = 'Deposito'
+UNION ALL
+SELECT 'Laura', 'Suarez', 'compras', 'compras', id_rol FROM rol WHERE nombre = 'Compras'
+UNION ALL
+SELECT 'Sofia', 'Martinez', 'calidad', 'calidad', id_rol FROM rol WHERE nombre = 'Calidad';
+
 
 -- =========================
 -- CLIENTES
@@ -49,6 +62,35 @@ CREATE TABLE cliente (
     email VARCHAR(100),
     direccion VARCHAR(150)
 );
+
+INSERT INTO cliente (razon_social, cuit, telefono, email, direccion) VALUES
+('Constructora Norte SRL', '30-71234567-8', '341-555-1001', 'compras@constructoranorte.com', 'Av. Industrial 1200'),
+('AgroPartes del Sur SA', '30-70987654-3', '341-555-2040', 'produccion@agropartes.com', 'Ruta 9 Km 315');
+
+
+-- =========================
+-- CHAT CLIENTE / ADMINISTRACION
+-- =========================
+
+CREATE TABLE chat_mensaje (
+    id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    mensaje TEXT NOT NULL,
+    origen VARCHAR(30) DEFAULT 'Cliente',
+    departamento VARCHAR(50) DEFAULT 'Administracion',
+    respuesta TEXT,
+    estado VARCHAR(30) DEFAULT 'Pendiente',
+    fecha DATETIME NOT NULL,
+    fecha_respuesta DATETIME,
+    id_usuario_respuesta INT,
+
+    FOREIGN KEY (id_usuario_respuesta) REFERENCES usuario(id_usuario)
+);
+
+INSERT INTO chat_mensaje (nombre, email, mensaje, origen, departamento, respuesta, estado, fecha, fecha_respuesta, id_usuario_respuesta) VALUES
+('Constructora Norte SRL', 'compras@constructoranorte.com', 'Necesitamos consultar plazo estimado para estructuras metalicas livianas.', 'Cliente', 'Administracion', 'Recibimos la consulta. Administracion preparara una propuesta comercial.', 'Respondido', NOW(), NOW(), 1),
+('AgroPartes del Sur SA', 'produccion@agropartes.com', 'Quisieramos cotizar soportes mecanizados en acero SAE 1010.', 'Cliente', 'Administracion', NULL, 'Pendiente', NOW(), NULL, NULL);
 
 
 -- =========================
@@ -67,6 +109,10 @@ CREATE TABLE pedido (
 
     FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
 );
+
+INSERT INTO pedido (id_cliente, fecha, descripcion, cantidad, material, fecha_entrega, estado) VALUES
+(1, CURDATE(), 'Estructuras metalicas livianas para cerramiento industrial', 12, 'Acero estructural', DATE_ADD(CURDATE(), INTERVAL 21 DAY), 'Pendiente'),
+(2, CURDATE(), 'Soportes mecanizados para linea de sembradoras', 80, 'Acero SAE 1010', DATE_ADD(CURDATE(), INTERVAL 14 DAY), 'Con orden de trabajo');
 
 
 -- =========================
@@ -87,6 +133,9 @@ CREATE TABLE orden_trabajo (
     FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido)
 );
 
+INSERT INTO orden_trabajo (id_pedido, fecha_inicio, fecha_prevista, fecha_finalizacion, prioridad, estado, observaciones, id_usuario) VALUES
+(2, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 10 DAY), NULL, 'Alta', 'En produccion', 'Priorizar corte y mecanizado por fecha de entrega comprometida.', 1);
+
 
 -- =========================
 -- PRODUCCION
@@ -104,6 +153,9 @@ CREATE TABLE produccion (
     FOREIGN KEY (id_orden) REFERENCES orden_trabajo(id_orden)
 );
 
+INSERT INTO produccion (id_orden, fecha_inicio, fecha_fin, cantidad_producida, avance, observaciones) VALUES
+(1, NOW(), NULL, 25, 35, 'Corte inicial completado. Pendiente mecanizado final.');
+
 
 -- =========================
 -- MAQUINAS
@@ -119,6 +171,11 @@ CREATE TABLE maquina (
     ubicacion VARCHAR(100),
     estado VARCHAR(30)
 );
+
+INSERT INTO maquina (marca, modelo, numero_identificacion, fecha_adquisicion, costo, ubicacion, estado) VALUES
+('Cincinnati', 'CL-707', 'TOR-001', '2020-03-15', 4500000.00, 'Sector Torneria', 'Operativa'),
+('Baykal', 'APH-3100', 'PLE-002', '2021-09-20', 6200000.00, 'Sector Plegado', 'Operativa'),
+('Lincoln', 'Power MIG 350', 'SOL-003', '2019-06-12', 1800000.00, 'Sector Soldadura', 'Operativa');
 
 
 -- =========================
@@ -170,6 +227,11 @@ CREATE TABLE material (
     stock DECIMAL(10,2) DEFAULT 0,
     stock_minimo DECIMAL(10,2) DEFAULT 0
 );
+
+INSERT INTO material (nombre, tipo, unidad, espesor, stock, stock_minimo) VALUES
+('Acero estructural', 'Chapa', 'kg', '6 mm', 1450.00, 300.00),
+('Acero SAE 1010', 'Barra', 'kg', '25 mm', 820.00, 250.00),
+('Electrodo E6013', 'Consumible', 'kg', NULL, 95.00, 40.00);
 
 
 -- =========================

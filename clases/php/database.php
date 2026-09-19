@@ -5,7 +5,7 @@ class Database {
     public static function getConnection() {
         if (self::$pdo === null) {
             $host = '127.0.0.1';
-            $db   = 'biblioteca';
+            $db   = 'metalurgica_san_jorge';
             $user = 'root';
             $pass = '';
             $charset = 'utf8mb4';
